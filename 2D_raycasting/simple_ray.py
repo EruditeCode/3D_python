@@ -1,3 +1,5 @@
+# Video Walkthrough Link: https://youtu.be/fF13RQCSgMY
+
 import pygame
 from simple_ray_support import Ray, Wall
 from sys import exit
