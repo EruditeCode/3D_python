@@ -1,8 +1,10 @@
+# Video Walkthrough Link: https://youtu.be/fF13RQCSgMY
+
 import pygame
 import math
 from sys import exit
 from maze_ref import maze
-from REFmaze_rays_support import Particle
+from maze_rays_support import Particle
 
 # The main program loop.
 def main():
