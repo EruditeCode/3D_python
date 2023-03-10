@@ -1,3 +1,5 @@
+# Video Walkthrough Link: https://youtu.be/fF13RQCSgMY
+
 import pygame
 from maze_builder_support import create_grid
 from random import randint
