@@ -18,9 +18,9 @@ def main():
 	ceiling = pygame.Surface((WIDTH//2, HEIGHT//2))
 	ceiling.fill((87,82,73))
 	floor = pygame.Surface((WIDTH//2, HEIGHT//2))
-	floor.fill((171,150,98))
+	floor.fill((113,82,41))
 
-	wall_texture = pygame.image.load('wallpaper.png').convert()
+	wall_texture = pygame.image.load('stonewall.png').convert()
 	wall_texture = pygame.transform.scale(wall_texture, (400, 100))
 
 	p1 = Particle((20,20), 500)
