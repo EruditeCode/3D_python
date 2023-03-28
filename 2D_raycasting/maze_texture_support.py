@@ -6,25 +6,21 @@ class Particle:
 		self.ray_length = ray_length
 		self.dir = 0
 		self.rays = []
-		for angle in range(-300, 300, 10):
+		self.active_walls = []
+		for angle in range(-300, 300, 3):
 			ray = Ray(self.pos, angle, self.ray_length)
 			self.rays.append(ray)
 
 	def update(self, point, walls):
 		self.pos = point
 		grouped_walls = self.group_walls(walls)
-		active_walls = []
-		start_points = []
-		distances = []
 		for ray in self.rays:
-			wall = ray.update(self.pos, self.dir, grouped_walls)
-			if wall not in active_walls:
-				active_walls.append(wall)
-				start_points.append(ray.terminus)
-				distances.append([ray.corrected_distance])
-			else:
-				distances[-1].append(ray.corrected_distance)
-		return active_walls, start_points, distances
+			ray.update(self.pos, self.dir, grouped_walls)
+
+		self.active_walls = []
+		for ray in self.rays:
+			if ray.active_wall not in self.active_walls:
+				self.active_walls.append(ray.active_wall)
 
 	def group_walls(self, walls):
 		distances = []
@@ -60,13 +56,13 @@ class Ray:
 		self.terminus = None
 		self.distance = self.length
 		self.corrected_distance = None
+		self.active_wall = None
 
 	def update(self, point, direction, grouped_walls):
 		self.pos = point
 		self.update_direction(direction)
-		active_wall = self.update_terminus(grouped_walls)
+		self.update_terminus(grouped_walls)
 		self.update_corrected_distance()
-		return active_wall
 
 	def update_direction(self, direction):
 		a = self.init_angle + direction
@@ -80,7 +76,6 @@ class Ray:
 		for group in grouped_walls:
 			# Need to get the minimum intersection distance from the group of walls.
 			distance, min_terminus = self.length, None
-			active_wall = None
 			for wall in group:
 				x1, y1 = wall[0][0], wall[0][1]
 				x2, y2 = wall[1][0], wall[1][1]
@@ -104,14 +99,15 @@ class Ray:
 					if dist_check < distance:
 						distance = dist_check
 						min_terminus = (x_point, y_point)
-						active_wall = wall
+						self.active_wall = wall
 
-			if active_wall:
+			if distance != self.length:
 				self.distance = distance
 				self.terminus = min_terminus
-				return active_wall
+				return
 
 		point_x = self.pos[0] + self.dir[0] * self.length
 		point_y = self.pos[1] + self.dir[1] * self.length
 		self.terminus = (point_x, point_y)
 		self.distance = self.length
+		self.active_wall = None

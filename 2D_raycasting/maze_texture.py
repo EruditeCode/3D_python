@@ -16,9 +16,12 @@ def main():
 	bg = pygame.Surface((WIDTH, HEIGHT))
 	bg.fill((20,20,20))
 	ceiling = pygame.Surface((WIDTH//2, HEIGHT//2))
-	ceiling.fill((144,112,0))
+	ceiling.fill((87,82,73))
 	floor = pygame.Surface((WIDTH//2, HEIGHT//2))
-	floor.fill((220,190,35))
+	floor.fill((171,150,98))
+
+	wall_texture = pygame.image.load('wallpaper.png').convert()
+	wall_texture = pygame.transform.scale(wall_texture, (400, 100))
 
 	p1 = Particle((20,20), 500)
 
@@ -66,35 +69,40 @@ def main():
 			x = p1.pos[0] - (1 * math.cos(angle))
 			y = p1.pos[1] - (1 * math.sin(angle))
 			new_pos = (x, y)
-		active_walls, start_points, render_distances = p1.update(new_pos, maze)
+		p1.update(new_pos, maze)
 
 		# Displaying background, rays, walls and the particle.
 		screen.blit(bg, (0, 0))
-		#screen.blit(ceiling, (WIDTH//2, 0))
-		#screen.blit(floor, (WIDTH//2, HEIGHT//2))
+		screen.blit(ceiling, (WIDTH//2, 0))
+		screen.blit(floor, (WIDTH//2, HEIGHT//2))
 		for ray in p1.rays:
 			pygame.draw.aaline(screen, (240,240,240), ray.pos, ray.terminus, 1)
 		for wall in maze:
-			if wall in active_walls:
-				pygame.draw.line(screen, (255,0,0), wall[0], wall[1], 2)
+			if wall in p1.active_walls:
+				pygame.draw.line(screen, (255,0,0), wall[0], wall[1], 1)
 			else:
 				pygame.draw.line(screen, (200,200,200), wall[0], wall[1], 1)
 		pygame.draw.circle(screen, (100,255,100), p1.pos, 7)
 
 
-		# use the image to fill in the slices and rescale the chunk...
 		slice_w = (WIDTH//2)/len(p1.rays)
 		offset = WIDTH//2
 		for i, ray in enumerate(p1.rays):
-			value = 1/(ray.distance / 25)
-			if value >= 1:
-				c = 255
+			if ray.terminus[0] == ray.active_wall[0][0]:
+				img_start = (abs(ray.terminus[1] - ray.active_wall[0][1]) * 10)
 			else:
-				c = 255 * value
+				img_start = (abs(ray.terminus[0] - ray.active_wall[0][0]) * 10)
+
+			if img_start >= 300:
+				img_start -= 300
+
 			h = (10 / ray.corrected_distance)*HEIGHT
-			r = pygame.Rect(offset+(i*slice_w), 0, slice_w+1, h)
-			r.centery = HEIGHT//2
-			pygame.draw.rect(screen, (c,c,c), r, 2)
+			w = (h / 100) * 400
+			y = (HEIGHT//2)-(h//2)
+			img_start = (img_start / 400) * w
+			tmp_img = pygame.transform.scale(wall_texture, (w, h))
+			screen.blit(tmp_img, (offset+(i*slice_w), y), (img_start,0,slice_w,h))
+
 		
 		pygame.display.update()
 		clock.tick(30)
