@@ -81,12 +81,12 @@ def main():
 		slice_w = (WIDTH//2)/len(p1.rays)
 		offset = WIDTH//2
 		for i, ray in enumerate(p1.rays):
-			value = 1/(ray.distance / 25)
+			value = 1/(ray.corrected_distance / 25)
 			if value >= 1:
 				c = 255
 			else:
 				c = 255 * value
-			h = (10 / ray.distance)*HEIGHT
+			h = (10 / ray.corrected_distance)*HEIGHT
 			r = pygame.Rect(offset+(i*slice_w), 0, slice_w+1, h)
 			r.centery = HEIGHT//2
 			pygame.draw.rect(screen, (c,c,4), r)
