@@ -70,15 +70,15 @@ def main():
 
 		# Displaying background, rays, walls and the particle.
 		screen.blit(bg, (0, 0))
-		screen.blit(ceiling, (WIDTH//2, 0))
-		screen.blit(floor, (WIDTH//2, HEIGHT//2))
+		#screen.blit(ceiling, (WIDTH//2, 0))
+		#screen.blit(floor, (WIDTH//2, HEIGHT//2))
 		for ray in p1.rays:
 			pygame.draw.aaline(screen, (240,240,240), ray.pos, ray.terminus, 1)
 		for wall in maze:
 			if wall in active_walls:
 				pygame.draw.line(screen, (255,0,0), wall[0], wall[1], 2)
 			else:
-				pygame.draw.line(screen, (200,200,200), wall[0], wall[1], 2)
+				pygame.draw.line(screen, (200,200,200), wall[0], wall[1], 1)
 		pygame.draw.circle(screen, (100,255,100), p1.pos, 7)
 
 
@@ -94,7 +94,7 @@ def main():
 			h = (10 / ray.corrected_distance)*HEIGHT
 			r = pygame.Rect(offset+(i*slice_w), 0, slice_w+1, h)
 			r.centery = HEIGHT//2
-			pygame.draw.rect(screen, (c,c,4), r)
+			pygame.draw.rect(screen, (c,c,c), r, 2)
 		
 		pygame.display.update()
 		clock.tick(30)

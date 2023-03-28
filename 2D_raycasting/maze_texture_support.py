@@ -6,7 +6,7 @@ class Particle:
 		self.ray_length = ray_length
 		self.dir = 0
 		self.rays = []
-		for angle in range(-300, 300, 5):
+		for angle in range(-300, 300, 10):
 			ray = Ray(self.pos, angle, self.ray_length)
 			self.rays.append(ray)
 
