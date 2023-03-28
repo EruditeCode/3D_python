@@ -6,8 +6,7 @@ class Particle:
 		self.ray_length = ray_length
 		self.dir = 0
 		self.rays = []
-		self.active_walls = []
-		for angle in range(-300, 300, 3):
+		for angle in range(-300, 300, 5):
 			ray = Ray(self.pos, angle, self.ray_length)
 			self.rays.append(ray)
 
@@ -16,11 +15,6 @@ class Particle:
 		grouped_walls = self.group_walls(walls)
 		for ray in self.rays:
 			ray.update(self.pos, self.dir, grouped_walls)
-
-		self.active_walls = []
-		for ray in self.rays:
-			if ray.active_wall not in self.active_walls:
-				self.active_walls.append(ray.active_wall)
 
 	def group_walls(self, walls):
 		distances = []

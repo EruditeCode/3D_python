@@ -78,31 +78,30 @@ def main():
 		for ray in p1.rays:
 			pygame.draw.aaline(screen, (240,240,240), ray.pos, ray.terminus, 1)
 		for wall in maze:
-			if wall in p1.active_walls:
-				pygame.draw.line(screen, (255,0,0), wall[0], wall[1], 1)
-			else:
-				pygame.draw.line(screen, (200,200,200), wall[0], wall[1], 1)
+			pygame.draw.line(screen, (200,200,200), wall[0], wall[1], 1)
 		pygame.draw.circle(screen, (100,255,100), p1.pos, 7)
 
 
 		slice_w = (WIDTH//2)/len(p1.rays)
 		offset = WIDTH//2
 		for i, ray in enumerate(p1.rays):
-			if ray.terminus[0] == ray.active_wall[0][0]:
-				img_start = (abs(ray.terminus[1] - ray.active_wall[0][1]) * 10)
-			else:
-				img_start = (abs(ray.terminus[0] - ray.active_wall[0][0]) * 10)
+			if ray.active_wall:
+				if ray.terminus[0] == ray.active_wall[0][0]:
+					img_start = abs(ray.terminus[1] - ray.active_wall[0][1]) * 10
+				else:
+					img_start = abs(ray.terminus[0] - ray.active_wall[0][0]) * 10
 
-			if img_start >= 300:
-				img_start -= 300
+				if img_start >= 300:
+					img_start -= 300
 
-			h = (10 / ray.corrected_distance)*HEIGHT
-			w = (h / 100) * 400
-			y = (HEIGHT//2)-(h//2)
-			img_start = (img_start / 400) * w
-			tmp_img = pygame.transform.scale(wall_texture, (w, h))
-			screen.blit(tmp_img, (offset+(i*slice_w), y), (img_start,0,slice_w,h))
-
+				h = (10 / ray.corrected_distance)*HEIGHT
+				if h > HEIGHT:
+					h = HEIGHT
+				w = h * 4
+				y = (HEIGHT/2) - (h/2)
+				img_start = (img_start*w) / 400
+				tmp_img = pygame.transform.scale(wall_texture, (w, h))
+				screen.blit(tmp_img, (offset+(i*slice_w), y), (img_start,0,slice_w,h))
 		
 		pygame.display.update()
 		clock.tick(30)
